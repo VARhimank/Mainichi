@@ -23,9 +23,10 @@ class user{
         else{cout<<"\n** Cannot issue books **";}
     }
     int tokenRet(){return token;}
-    void tokenIssued(){token++;}
+    void modifyToken(int n){token = token + n;}
     int userIdRet(){return userId;}
     void userCurrentBookId(){cin>>currentBookId;}
+    void modifyCurrentBookId(){currentBookId=NULL;}
     int userCurrentBookIdRet(){return currentBookId;}
 };
 
@@ -49,7 +50,7 @@ class Library{
     user u[2];
     book b[2];
     string bookIssue;
-    string bookReturn;
+    int bookReturnId;
     int userIssueId;
     
     public:
@@ -74,7 +75,7 @@ class Library{
                 u[i].Udisplay();
 
                 if(u[i].tokenRet()==0){
-                    u[i].tokenIssued();
+                    u[i].modifyToken(1);
                     cout<<"\nSelect your book from the list :-";
                     for(int k=0;k<2;k++){
                         b[k].Bdisplay();
@@ -93,8 +94,32 @@ class Library{
         }
     }
 
+
     void returnWindow(){
-        cout<<"Enter date of return(dd/mm/yyyy) : ";cin>>bookReturn;
+        cout<<"\n\n** BOOK RETURN Window **";
+        cout<<"\nEnter User Id : ";cin>>userIssueId;
+        for(int i=0;i<2;i++){
+            if(userIssueId == u[i].userIdRet()){
+                cout<<"\nUser Found!\n"<<"\nYour details :";
+                u[i].Udisplay();
+
+                if(u[i].tokenRet()==1){
+                    cout<<"\nIssue Details: ";
+                    for(int j=0;j<2;j++){
+                        if(u[i].userCurrentBookIdRet() == b[j].bookIdRet()){
+                            b[j].Bdisplay();
+
+                            cout<<"\nEnter the book id for the book you want to return : ";cin>>bookReturnId;
+                            if(bookReturnId == b[j].bookIdRet()){
+                                u[i].modifyToken(-1);
+                                u[i].modifyCurrentBookId();
+                                cout<<"\n** Successfully Returned the book **";
+                            }
+                        }
+                    }
+                }else{cout<<"You don't have any books to return";}
+            }
+        }
     }
 
     void records(){
@@ -106,8 +131,8 @@ class Library{
                         b[j].Bdisplay();
                     }
                 }
+                cout<<"\nDate of issue(dd/mm/yyyy) : "<<bookIssue<<endl;
             }
-            cout<<"\nDate of issue(dd/mm/yyyy) : "<<bookIssue<<endl;
         }
     }
 };
